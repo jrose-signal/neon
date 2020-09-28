@@ -45,7 +45,7 @@ impl CallbackInfo<'_> {
         CallContext::<T>::with(env, self, f)
     }
 
-    pub fn set_return<'a, 'b, T: Value>(&'a self, value: Handle<'b, T>) {
+    pub fn set_return<T: Value>(&self, value: Handle<T>) {
         unsafe {
             neon_runtime::call::set_return(self.info, value.to_raw())
         }
@@ -328,7 +328,7 @@ pub trait Context<'a>: ContextInternal<'a> {
     }
 
     /// Throws a JS value.
-    fn throw<'b, T: Value, U>(&mut self, v: Handle<'b, T>) -> NeonResult<U> {
+    fn throw<T: Value, U>(&mut self, v: Handle<T>) -> NeonResult<U> {
         unsafe {
             neon_runtime::error::throw(self.env().to_raw(), v.to_raw());
         }
@@ -538,6 +538,8 @@ impl<'a, T: This> CallContext<'a, T> {
 
     /// Indicates the number of arguments that were passed to the function.
     pub fn len(&self) -> i32 { self.info.len(self) }
+
+    pub fn is_empty(&self) -> bool { self.len() == 0 }
 
     /// Produces the `i`th argument, or `None` if `i` is greater than or equal to `self.len()`.
     pub fn argument_opt(&mut self, i: i32) -> Option<Handle<'a, JsValue>> {

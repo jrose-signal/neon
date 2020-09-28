@@ -49,14 +49,13 @@ impl Env {
         let mut ptr: *mut c_void = unsafe { neon_runtime::class::get_class_map(self.to_raw()) };
         if ptr.is_null() {
             let b: Box<ClassMap> = Box::new(ClassMap::new());
-            let raw = Box::into_raw(b);
-            ptr = unsafe { std::mem::transmute(raw) };
+            ptr = Box::into_raw(b) as *mut _;
             let free_map: *mut c_void = unsafe { std::mem::transmute(drop_class_map as usize) };
             unsafe {
                 neon_runtime::class::set_class_map(self.to_raw(), ptr, free_map);
             }
         }
-        unsafe { std::mem::transmute(ptr) }
+        unsafe { &mut *(ptr as *mut _) }
     }
 
     #[cfg(feature = "napi-runtime")]
@@ -195,7 +194,7 @@ extern "C" fn try_catch_glue<'a, 'b: 'a, C, T, F>(rust_thunk: *mut c_void,
           F: UnwindSafe + FnOnce(&mut C) -> JsResult<'b, T>
 {
     let f: F = *unsafe { Box::from_raw(rust_thunk as *mut F) };
-    let cx: &mut C = unsafe { std::mem::transmute(cx) };
+    let cx: &mut C = unsafe { &mut *(cx as *mut _) };
 
     // The mutable reference to the context is a fiction of the Neon library,
     // since it doesn't actually contain any data in the Rust memory space,

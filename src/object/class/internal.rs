@@ -94,8 +94,7 @@ impl<T: Class> Callback<*mut c_void> for AllocateCallback<T> {
                 let kernel: fn(CallContext<JsUndefined>) -> NeonResult<T::Internals> =
                     mem::transmute(neon_runtime::class::get_allocate_kernel(data));
                 if let Ok(value) = convert_panics(env, || { kernel(cx) }) {
-                    let p = Box::into_raw(Box::new(value));
-                    mem::transmute(p)
+                    Box::into_raw(Box::new(value)) as *mut _
                 } else {
                     null_mut()
                 }

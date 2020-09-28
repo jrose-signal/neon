@@ -130,7 +130,7 @@ impl JsUndefined {
         }
     }
 
-    fn as_this_compat(env: Env, _: raw::Local) -> Self {
+    fn this_compat(env: Env, _: raw::Local) -> Self {
         unsafe {
             let mut local: raw::Local = std::mem::zeroed();
             neon_runtime::primitive::undefined(&mut local, env.to_raw());
@@ -150,12 +150,12 @@ impl Managed for JsUndefined {
 unsafe impl This for JsUndefined {
     #[cfg(feature = "legacy-runtime")]
     fn as_this(h: raw::Local) -> Self {
-        JsUndefined::as_this_compat(Env::current(), h)
+        JsUndefined::this_compat(Env::current(), h)
     }
 
     #[cfg(feature = "napi-runtime")]
     fn as_this(env: Env, h: raw::Local) -> Self {
-        JsUndefined::as_this_compat(env, h)
+        JsUndefined::this_compat(env, h)
     }
 }
 
@@ -526,6 +526,16 @@ impl JsArray {
     #[cfg(feature = "napi-runtime")]
     pub fn len<'a, C: Context<'a>>(self, cx: &mut C) -> u32 {
         self.len_inner(cx.env())
+    }
+
+    #[cfg(feature = "legacy-runtime")]
+    pub fn is_empty(self) -> bool {
+        self.len() == 0
+    }
+
+    #[cfg(feature = "napi-runtime")]
+    pub fn is_empty<'a, C: Context<'a>>(self, cx: &mut C) -> bool {
+        self.len(cx) == 0
     }
 }
 

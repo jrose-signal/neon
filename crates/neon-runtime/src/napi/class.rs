@@ -12,7 +12,7 @@ pub unsafe fn create_base(_isolate: Env,
                                      _call: CCallback,
                                      _drop: extern "C" fn(*mut c_void)) -> *mut c_void { unimplemented!() }
 
-pub unsafe fn get_name<'a>(_base_out: &'a mut *mut u8, _isolate: Env, _metadata: *const c_void) -> usize { unimplemented!() }
+pub unsafe fn get_name(_base_out: &mut *mut u8, _isolate: Env, _metadata: *const c_void) -> usize { unimplemented!() }
 
 pub unsafe fn set_name(_isolate: Env, _metadata: *mut c_void, _name: *const u8, _byte_length: u32) -> bool { unimplemented!() }
 

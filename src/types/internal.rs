@@ -47,7 +47,7 @@ impl<T: Value> Callback<()> for FunctionCallback<T> {
     }
 
     fn as_ptr(self) -> *mut c_void {
-        unsafe { mem::transmute(self.0) }
+        self.0 as *mut _
     }
 }
 
@@ -75,6 +75,6 @@ impl<T: Value> Callback<raw::Local> for FunctionCallback<T> {
     }
 
     fn as_ptr(self) -> *mut c_void {
-        unsafe { mem::transmute(self.0) }
+        self.0 as *mut _
     }
 }
