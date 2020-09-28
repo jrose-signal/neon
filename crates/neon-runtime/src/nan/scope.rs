@@ -3,32 +3,52 @@
 use raw::{HandleScope, EscapableHandleScope, InheritedHandleScope, Isolate};
 
 pub trait Root {
+    /// # Safety
+    /// Instance must not be used calling `enter`
     unsafe fn allocate() -> Self;
+    /// # Safety
+    /// Must be called exactly once immediately after `allocate`
     unsafe fn enter(&mut self, Isolate);
+    /// # Safety
+    /// Must be called exactly once and only after `allocate`
     unsafe fn exit(&mut self, Isolate);
 }
 
 impl Root for HandleScope {
+    /// # Safety
+    /// Instance must not be used calling `enter`
     unsafe fn allocate() -> Self { HandleScope::new() }
+    /// # Safety
+    /// Must be called exactly once immediately after `allocate`
     unsafe fn enter(&mut self, isolate: Isolate) {
         enter(self, isolate)
     }
+    /// # Safety
+    /// Must be called exactly once and only after `allocate`
     unsafe fn exit(&mut self, _: Isolate) {
         exit(self)
     }
 }
 
 impl Root for EscapableHandleScope {
+    /// # Safety
+    /// Instance must not be used calling `enter`
     unsafe fn allocate() -> Self { EscapableHandleScope::new() }
+    /// # Safety
+    /// Must be called exactly once immediately after `allocate`
     unsafe fn enter(&mut self, isolate: Isolate) {
         enter_escapable(self, isolate)
     }
+    /// # Safety
+    /// Must be called exactly once and only after `allocate`
     unsafe fn exit(&mut self, _: Isolate) {
         exit_escapable(self)
     }
 }
 
 impl Root for InheritedHandleScope {
+    /// # Safety
+    /// Instance must not be used calling `enter`
     unsafe fn allocate() -> Self { InheritedHandleScope }
     unsafe fn enter(&mut self, _: Isolate) { }
     unsafe fn exit(&mut self, _: Isolate) { }
