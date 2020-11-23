@@ -28,7 +28,10 @@ impl JsBuffer {
         build(env, |out| { unsafe { neon_runtime::buffer::new(env.to_raw(), out, size) } })
     }
 
-    /// Constructs a new `Buffer` object, safely zero-filled.
+    /// Constructs a new `Buffer` object, without zero-filling
+    /// # Safety
+    /// The `Buffer` will not be zero filled and the user must be careful to overwrite the
+    /// contents to avoid insecurely revealing application memory.
     pub unsafe fn uninitialized<'a, C: Context<'a>>(cx: &mut C, size: u32) -> JsResult<'a, JsBuffer> {
         build(cx.env(), |out| { neon_runtime::buffer::uninitialized(out, size) })
     }

@@ -16,7 +16,13 @@ mod traits {
 
     /// A property key in a JavaScript object.
     pub trait PropertyKey {
+        /// # Safety
+        /// `obj` must be a pointer to an `Object`
         unsafe fn get_from(self, out: &mut raw::Local, obj: raw::Local) -> bool;
+
+        /// # Safety
+        /// - `obj` must be a pointer to a JavaScript `Object`
+        /// - `val` must be a JavaScript value
         unsafe fn set_from(self, out: &mut bool, obj: raw::Local, val: raw::Local) -> bool;
     }
 
