@@ -55,20 +55,20 @@ impl Root for InheritedHandleScope {
     unsafe fn exit(&mut self, _: Env) { }
 }
 
-pub unsafe extern "C" fn escape(_out: &mut Local, _scope: *mut EscapableHandleScope, _value: Local) { unimplemented!() }
+pub unsafe fn escape(_out: &mut Local, _scope: *mut EscapableHandleScope, _value: Local) { unimplemented!() }
 
-pub unsafe extern "C" fn chained(_out: *mut c_void, _closure: *mut c_void, _callback: extern fn(&mut c_void, *mut c_void, *mut c_void, *mut c_void), _parent_scope: *mut c_void) { unimplemented!() }
+pub unsafe fn chained(_out: *mut c_void, _closure: *mut c_void, _callback: extern fn(&mut c_void, *mut c_void, *mut c_void, *mut c_void), _parent_scope: *mut c_void) { unimplemented!() }
 
-pub unsafe extern "C" fn nested(_out: *mut c_void, _closure: *mut c_void, _callback: extern fn(&mut c_void, *mut c_void, *mut c_void), _realm: *mut c_void) { unimplemented!() }
+pub unsafe fn nested(_out: *mut c_void, _closure: *mut c_void, _callback: extern fn(&mut c_void, *mut c_void, *mut c_void), _realm: *mut c_void) { unimplemented!() }
 
-pub unsafe extern "C" fn size() -> usize { unimplemented!() }
+pub unsafe fn size() -> usize { unimplemented!() }
 
-pub unsafe extern "C" fn alignment() -> usize { unimplemented!() }
+pub unsafe fn alignment() -> usize { unimplemented!() }
 
-pub unsafe extern "C" fn escapable_size() -> usize { unimplemented!() }
+pub unsafe fn escapable_size() -> usize { unimplemented!() }
 
-pub unsafe extern "C" fn escapable_alignment() -> usize { unimplemented!() }
+pub unsafe fn escapable_alignment() -> usize { unimplemented!() }
 
-pub unsafe extern "C" fn get_global(env: Env, out: &mut Local) {
+pub unsafe fn get_global(env: Env, out: &mut Local) {
     assert_eq!(napi::napi_get_global(env, out as *mut _), napi::napi_status::napi_ok);
 }

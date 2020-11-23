@@ -20,16 +20,16 @@ impl Default for CCallback {
     }
 }
 
-pub unsafe extern "C" fn set_return(_info: FunctionCallbackInfo, _value: Local) {
+pub unsafe fn set_return(_info: FunctionCallbackInfo, _value: Local) {
 
 }
 
-pub unsafe extern "C" fn get_isolate(_info: FunctionCallbackInfo) -> Env { unimplemented!() }
+pub unsafe fn get_isolate(_info: FunctionCallbackInfo) -> Env { unimplemented!() }
 
 // FIXME: Remove. This will never be implemented
-pub unsafe extern "C" fn current_isolate() -> Env { panic!("current_isolate won't be implemented in n-api") }
+pub unsafe fn current_isolate() -> Env { panic!("current_isolate won't be implemented in n-api") }
 
-pub unsafe extern "C" fn is_construct(env: Env, info: FunctionCallbackInfo) -> bool {
+pub unsafe fn is_construct(env: Env, info: FunctionCallbackInfo) -> bool {
     let mut target: MaybeUninit<Local> = MaybeUninit::zeroed();
 
     let status = napi::napi_get_new_target(
@@ -49,7 +49,7 @@ pub unsafe extern "C" fn is_construct(env: Env, info: FunctionCallbackInfo) -> b
     !target.is_null()
 }
 
-pub unsafe extern "C" fn this(env: Env, info: FunctionCallbackInfo, out: &mut Local) {
+pub unsafe fn this(env: Env, info: FunctionCallbackInfo, out: &mut Local) {
     let status = napi::napi_get_cb_info(
         env,
         info,
@@ -63,7 +63,7 @@ pub unsafe extern "C" fn this(env: Env, info: FunctionCallbackInfo, out: &mut Lo
 
 /// Mutates the `out` argument provided to refer to the associated data value of the
 /// `napi_callback_info`.
-pub unsafe extern "C" fn data(env: Env, info: FunctionCallbackInfo, out: &mut *mut c_void) {
+pub unsafe fn data(env: Env, info: FunctionCallbackInfo, out: &mut *mut c_void) {
     let mut data = null_mut();
     let status = napi::napi_get_cb_info(
         env,
@@ -79,7 +79,7 @@ pub unsafe extern "C" fn data(env: Env, info: FunctionCallbackInfo, out: &mut *m
 }
 
 /// Gets the number of arguments passed to the function.
-pub unsafe extern "C" fn len(env: Env, info: FunctionCallbackInfo) -> i32 {
+pub unsafe fn len(env: Env, info: FunctionCallbackInfo) -> i32 {
     let mut argc = 0usize;
     let status = napi::napi_get_cb_info(
         env,
@@ -94,7 +94,7 @@ pub unsafe extern "C" fn len(env: Env, info: FunctionCallbackInfo) -> i32 {
 }
 
 /// Returns the function arguments as a `SmallVec<[Local; 8]>`
-pub unsafe extern "C" fn argv(env: Env, info: FunctionCallbackInfo) -> SmallVec<[Local; 8]> {
+pub unsafe fn argv(env: Env, info: FunctionCallbackInfo) -> SmallVec<[Local; 8]> {
     let len = len(env, info);
     let mut args = smallvec![null_mut(); len as usize];
     let mut num_args = args.len();

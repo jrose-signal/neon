@@ -4,7 +4,7 @@ use std::ptr::null_mut;
 
 use nodejs_sys as napi;
 
-pub unsafe extern "C" fn new(env: Env, out: &mut Local, size: u32) -> bool {
+pub unsafe fn new(env: Env, out: &mut Local, size: u32) -> bool {
     let mut bytes = null_mut();
     let status = napi::napi_create_buffer(env, size as usize, &mut bytes as *mut _, out as *mut _);
     if status == napi::napi_status::napi_ok {
@@ -17,9 +17,9 @@ pub unsafe extern "C" fn new(env: Env, out: &mut Local, size: u32) -> bool {
     }
 }
 
-pub unsafe extern "C" fn uninitialized(_out: &mut Local, _size: u32) -> bool { unimplemented!() }
+pub unsafe fn uninitialized(_out: &mut Local, _size: u32) -> bool { unimplemented!() }
 
-pub unsafe extern "C" fn data<'a, 'b>(env: Env, base_out: &'a mut *mut c_void, obj: Local) -> usize {
+pub unsafe fn data<'a, 'b>(env: Env, base_out: &'a mut *mut c_void, obj: Local) -> usize {
     let mut size = 0;
     assert_eq!(
         napi::napi_get_buffer_info(env, obj, base_out as *mut _, &mut size as *mut _),
