@@ -205,6 +205,15 @@ mod napi1 {
             reference: Ref,
             result: *mut Value,
         ) -> Status;
+    
+        fn create_external_buffer(
+            env: Env,
+            length: usize,
+            data: *mut c_void,
+            finalize_cb: Finalize,
+            finalize_hint: *mut c_void,
+            result: *mut Value,
+        ) -> Status;
     });
 }
 

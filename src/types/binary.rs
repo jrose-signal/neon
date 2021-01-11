@@ -8,6 +8,8 @@ use context::{Context, Lock};
 use context::internal::Env;
 use borrow::{Borrow, BorrowMut, Ref, RefMut, LoanError};
 use borrow::internal::Pointer;
+#[cfg(feature = "napi-1")]
+use handle::Handle;
 use handle::Managed;
 use types::{Value, Object, build};
 use types::internal::ValueInternal;
@@ -34,6 +36,20 @@ impl JsBuffer {
         build(env, |out| { neon_runtime::buffer::uninitialized(env.to_raw(), out, size) })
     }
 
+    #[cfg(feature = "napi-1")]
+    /// Construct a new `Buffer` from bytes allocated by Rust
+    pub fn external<'a, C, T>(cx: &mut C, data: T) -> Handle<'a, JsBuffer>
+    where
+        C: Context<'a>,
+        T: AsMut<[u8]> + Send,
+    {
+        let env = cx.env().to_raw();
+        let value = unsafe {
+            neon_runtime::buffer::new_external(env, data)
+        };
+
+        Handle::new_internal(JsBuffer(value))
+    }
 }
 
 impl Managed for JsBuffer {

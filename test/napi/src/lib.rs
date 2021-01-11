@@ -144,6 +144,7 @@ fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("write_array_buffer_with_borrow_mut", write_array_buffer_with_borrow_mut)?;
     cx.export_function("return_uninitialized_buffer", return_uninitialized_buffer)?;
     cx.export_function("return_buffer", return_buffer)?;
+    cx.export_function("return_external_buffer", return_external_buffer)?;
     cx.export_function("read_buffer_with_lock", read_buffer_with_lock)?;
     cx.export_function("read_buffer_with_borrow", read_buffer_with_borrow)?;
     cx.export_function("write_buffer_with_lock", write_buffer_with_lock)?;
